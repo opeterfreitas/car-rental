@@ -33,7 +33,6 @@ public class ClientController {
 
         CepDto cepDto = service.consultaCep(clientDto.getCep());
         clientDto.setLogradouro(cepDto.getLogradouro());
-        clientDto.setComplemento(cepDto.getComplemento());
         clientDto.setBairro(cepDto.getBairro());
         clientDto.setLocalidade(cepDto.getLocalidade());
         clientDto.setUf(cepDto.getUf());

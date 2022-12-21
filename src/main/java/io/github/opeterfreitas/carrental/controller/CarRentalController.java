@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/carsrental")
+@RequestMapping(value = "/rentals")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class CarRentalController {
 

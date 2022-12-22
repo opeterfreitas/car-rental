@@ -1,9 +1,9 @@
-package io.github.opeterfreitas.carrental.infra.jackson.ser;
+package io.github.opeterfreitas.carrental.configuration.infra.jackson.ser;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import io.github.opeterfreitas.carrental.infra.utils.JavaTimeUtils;
+import io.github.opeterfreitas.carrental.configuration.infra.utils.JavaTimeUtils;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;

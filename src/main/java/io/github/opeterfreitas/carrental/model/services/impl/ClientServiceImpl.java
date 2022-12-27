@@ -58,6 +58,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public Client updateClient(Client client) {
         return repository.save(client);
     }

@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/invoices")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@RequestMapping(value = "/api/invoices")
+@CrossOrigin(origins = "*")
 public class InvoiceController {
 
     @Autowired
@@ -25,44 +25,58 @@ public class InvoiceController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveInvoice(@RequestBody @Valid InvoiceDto invoiceDto) {
-        Invoice invoice = invoiceDto.toModel();
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(invoice));
+    public ResponseEntity<Object> saveInvoice(@RequestBody @Valid InvoiceDto dto) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(service.save(dto));
     }
 
     @GetMapping
     public ResponseEntity<List<Invoice>> getAllInvoices() {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getOneInvoice(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<Object> getOneInvoice(@PathVariable Long id) {
         Optional<Invoice> invoiceOptional = service.findById(id);
-        if (!invoiceOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invoice not found");
+        if (invoiceOptional.isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(invoiceOptional.get());
         }
-        return ResponseEntity.status(HttpStatus.OK).body(invoiceOptional.get());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body("Fatura não encontrada!");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteInvoice(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<Object> deleteInvoice(@PathVariable Long id) {
         Optional<Invoice> invoiceOptional = service.findById(id);
-        if (!invoiceOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invoice not found");
+        if (invoiceOptional.isPresent()) {
+            service.delete(invoiceOptional.get());
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body("Fatura deletada com sucesso!");
         }
-        service.delete(invoiceOptional.get());
-        return ResponseEntity.status(HttpStatus.OK).body("Invoice deleted successfully.");
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body("Fatura não encontrada!");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateInvoice(@PathVariable(value = "id") Long id,
-                                                @RequestBody @Valid InvoiceDto invoiceDto) {
+    public ResponseEntity<Object> updateInvoice(@RequestBody @Valid @PathVariable Long id, InvoiceDto dto) {
         Optional<Invoice> invoiceOptional = service.findById(id);
-        if (!invoiceOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invoice not found.");
+        if (invoiceOptional.isPresent()) {
+            Invoice invoice = dto.toModel();
+            invoice.setId(invoiceOptional.get().getId());
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(service.save(dto));
         }
-        Invoice invoice = invoiceDto.toModel();
-        invoice.setId(invoiceOptional.get().getId());
-        return ResponseEntity.status(HttpStatus.OK).body(service.save(invoice));
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body("Fatura não encontrada!");
     }
 }

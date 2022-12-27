@@ -24,10 +24,9 @@ public class VehicleController {
 
     @PostMapping
     public ResponseEntity<Object> saveVehicle(@RequestBody @Valid VehicleDto dto) {
-        Vehicle vehicle = service.save(dto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(vehicle);
+                .body(service.save(dto));
     }
 
     @GetMapping

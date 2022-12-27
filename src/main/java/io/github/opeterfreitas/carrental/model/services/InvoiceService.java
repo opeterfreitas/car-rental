@@ -1,6 +1,9 @@
 package io.github.opeterfreitas.carrental.model.services;
 
+import io.github.opeterfreitas.carrental.controller.dto.InvoiceDto;
+import io.github.opeterfreitas.carrental.controller.dto.VehicleDto;
 import io.github.opeterfreitas.carrental.model.entities.Invoice;
+import io.github.opeterfreitas.carrental.model.entities.Vehicle;
 import io.github.opeterfreitas.carrental.model.repositories.InvoiceRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,30 +13,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class InvoiceService {
+public interface InvoiceService {
 
-    @Autowired
-    final InvoiceRepository repository;
+    Invoice save(InvoiceDto dto);
 
-    public InvoiceService(InvoiceRepository repository) {
-        this.repository = repository;
-    }
+    Optional<Invoice> findById(Long id);
 
-    @Transactional
-    public Invoice save(Invoice invoice) {
-        return repository.save(invoice);
-    }
+    void delete(Invoice invoice);
 
-    public List<Invoice> findAll() {
-        return repository.findAll();
-    }
-
-    public Optional<Invoice> findById(Long id) {
-        return repository.findById(id);
-    }
-
-    @Transactional
-    public void delete(Invoice invoice) {
-        repository.delete(invoice);
-    }
+    List<Invoice> findAll();
 }

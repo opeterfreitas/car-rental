@@ -63,6 +63,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     public CepDto consultaCep(String cep) {
-        return new RestTemplate().getForEntity("https://viacep.com.br/ws/" + cep + "/json/", CepDto.class).getBody();
+        return new RestTemplate()
+                .getForEntity("https://viacep.com.br/ws/" + cep + "/json/", CepDto.class)
+                .getBody();
     }
 }

@@ -22,7 +22,6 @@ public class ClientDto implements Serializable {
     private String cep;
     private String logradouro;
     private String complemento;
-    @NotBlank
     private String numero;
     private String bairro;
     private String localidade;

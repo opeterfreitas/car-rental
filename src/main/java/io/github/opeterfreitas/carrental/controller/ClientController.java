@@ -1,24 +1,20 @@
 package io.github.opeterfreitas.carrental.controller;
 
-import io.github.opeterfreitas.carrental.controller.dto.CepDto;
 import io.github.opeterfreitas.carrental.controller.dto.ClientDto;
 import io.github.opeterfreitas.carrental.model.entities.Client;
 import io.github.opeterfreitas.carrental.model.services.ClientService;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/clients")
+@RequestMapping("/api/clients")
 public class ClientController {
 
     @Autowired
@@ -29,17 +25,9 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveClient(@RequestBody @Valid ClientDto clientDto) {
-
-        CepDto cepDto = service.consultaCep(clientDto.getCep());
-        clientDto.setLogradouro(cepDto.getLogradouro());
-        clientDto.setBairro(cepDto.getBairro());
-        clientDto.setLocalidade(cepDto.getLocalidade());
-        clientDto.setUf(cepDto.getUf());
-
-        Client client = clientDto.toModel();
-        client.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(client));
+    public ResponseEntity save(@RequestBody @Valid ClientDto dto) {
+        Client client = service.save(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(client);
     }
 
     @GetMapping
@@ -68,15 +56,15 @@ public class ClientController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateClient(@PathVariable(value = "id") Long id,
-                                               @RequestBody @Valid ClientDto clientDto) {
+                                               @RequestBody @Valid ClientDto dto) {
         Optional<Client> clientOptional = service.findById(id);
         if (!clientOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Client not found.");
         }
-        var client = new Client();
-        BeanUtils.copyProperties(clientDto, client);
+
+        Client client = dto.toModel();
         client.setId(clientOptional.get().getId());
         client.setRegistrationDate(clientOptional.get().getRegistrationDate());
-        return ResponseEntity.status(HttpStatus.OK).body(service.save(client));
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateClient(client));
     }
 }

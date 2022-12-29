@@ -13,12 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/rentals")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@RequestMapping(value = "/api/rentals")
+@CrossOrigin(origins = "*")
 public class CarRentalController {
 
-    @Autowired
-    final CarRentalService service;
+    private CarRentalService service;
 
     public CarRentalController(CarRentalService service) {
         this.service = service;

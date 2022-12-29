@@ -1,16 +1,16 @@
-package io.github.opeterfreitas.carrental.configuration.infra.jackson;
+package io.github.opeterfreitas.carrental.infra.jackson;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import io.github.opeterfreitas.carrental.configuration.infra.jackson.ser.LocalDateSerializer;
+import io.github.opeterfreitas.carrental.infra.jackson.ser.LocalDateSerializer;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
-import io.github.opeterfreitas.carrental.configuration.infra.jackson.deser.LocalDateDeserializer;
-import io.github.opeterfreitas.carrental.configuration.infra.jackson.deser.LocalDateTimeDeserializer;
-import io.github.opeterfreitas.carrental.configuration.infra.jackson.ser.LocalDateTimeSerializer;
+import io.github.opeterfreitas.carrental.infra.jackson.deser.LocalDateDeserializer;
+import io.github.opeterfreitas.carrental.infra.jackson.deser.LocalDateTimeDeserializer;
+import io.github.opeterfreitas.carrental.infra.jackson.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 @Configuration

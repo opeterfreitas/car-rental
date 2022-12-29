@@ -17,8 +17,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class InvoiceController {
 
-    @Autowired
-    final InvoiceService service;
+    private InvoiceService service;
 
     public InvoiceController(InvoiceService service) {
         this.service = service;

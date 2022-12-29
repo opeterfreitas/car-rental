@@ -4,11 +4,13 @@ import io.github.opeterfreitas.carrental.controller.dto.InvoiceDto;
 import io.github.opeterfreitas.carrental.model.entities.Invoice;
 import io.github.opeterfreitas.carrental.model.repositories.InvoiceRepository;
 import io.github.opeterfreitas.carrental.model.services.InvoiceService;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class InvoiceServiceImpl implements InvoiceService {
 
     private InvoiceRepository repository;

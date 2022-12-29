@@ -1,4 +1,4 @@
-package io.github.opeterfreitas.carrental.configuration.infra.utils;
+package io.github.opeterfreitas.carrental.infra.utils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;

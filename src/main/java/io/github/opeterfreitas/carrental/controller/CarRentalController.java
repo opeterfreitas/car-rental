@@ -4,7 +4,6 @@ import io.github.opeterfreitas.carrental.controller.dto.CarRentalDto;
 import io.github.opeterfreitas.carrental.model.entities.CarRental;
 import io.github.opeterfreitas.carrental.model.services.CarRentalService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,59 +23,77 @@ public class CarRentalController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveCarRental(@RequestBody @Valid CarRentalDto carRentalDto) {
-        CarRental carRental = carRentalDto.toModel();
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(carRental));
+    public ResponseEntity<Object> saveCarRental(@RequestBody @Valid CarRentalDto dto) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(service.save(dto));
     }
 
     @GetMapping(value = "/open")
-    public ResponseEntity<List<CarRental>> findByDateReturnIsNull(){
+    public ResponseEntity<List<CarRental>> findByDateReturnIsNull() {
         List<CarRental> list = service.findByDateReturnIsNull();
-        return ResponseEntity.ok().body(list);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(list);
     }
 
     @GetMapping(value = "/close")
-    public ResponseEntity<List<CarRental>> findByDateReturnNotNull(){
+    public ResponseEntity<List<CarRental>> findByDateReturnNotNull() {
         List<CarRental> list = service.findByDateReturnNotNull();
-        return ResponseEntity.ok().body(list);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(list);
     }
 
     @GetMapping
     public ResponseEntity<List<CarRental>> getAllCarRental() {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getOneCarRental(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<Object> getOneCarRental(@PathVariable Long id) {
         Optional<CarRental> carRentalOptional = service.findById(id);
-        if (!carRentalOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CarRental not found");
+        if (carRentalOptional.isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(carRentalOptional.get());
         }
-        return ResponseEntity.status(HttpStatus.OK).body(carRentalOptional.get());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body("Locação não encontrada!");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteCarRental(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<Object> deleteCarRental(@PathVariable Long id) {
         Optional<CarRental> carRentalOptional = service.findById(id);
-        if (!carRentalOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CarRental not found");
+        if (carRentalOptional.isPresent()) {
+            service.delete(carRentalOptional.get());
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body("Locação deletada com sucesso!");
         }
-        service.delete(carRentalOptional.get());
-        return ResponseEntity.status(HttpStatus.OK).body("CarRental deleted successfully.");
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body("Locação não encontrada!");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateCarRental(@PathVariable(value = "id") Long id,
-                                                  @RequestBody @Valid CarRentalDto carRentalDto) {
+    public ResponseEntity<Object> updateCarRental(@RequestBody @Valid @PathVariable Long id, CarRentalDto dto) {
         Optional<CarRental> carRentalOptional = service.findById(id);
-        if (!carRentalOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CarRental not found.");
+        if (carRentalOptional.isPresent()) {
+            CarRental carRental = dto.toModel();
+            carRental.setId(carRentalOptional.get().getId());
+            carRental.setStart(carRentalOptional.get().getStart());
+            carRental.setFinish(carRentalOptional.get().getFinish());
+            carRental.setVehicle(carRentalOptional.get().getVehicle());
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(service.updateCarRental(carRental));
         }
-        CarRental carRental = carRentalDto.toModel();
-        carRental.setId(carRentalOptional.get().getId());
-        carRental.setStart(carRentalOptional.get().getStart());
-        carRental.setFinish(carRentalOptional.get().getFinish());
-        carRental.setVehicle(carRentalOptional.get().getVehicle());
-        return ResponseEntity.status(HttpStatus.OK).body(service.save(carRental));
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body("Locação não encontrada!");
     }
 }

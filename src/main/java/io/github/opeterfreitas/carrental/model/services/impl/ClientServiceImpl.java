@@ -1,10 +1,12 @@
 package io.github.opeterfreitas.carrental.model.services.impl;
 
-import io.github.opeterfreitas.carrental.controller.dto.CepDto;
-import io.github.opeterfreitas.carrental.controller.dto.ClientDto;
 import io.github.opeterfreitas.carrental.model.entities.Client;
 import io.github.opeterfreitas.carrental.model.repositories.ClientRepository;
 import io.github.opeterfreitas.carrental.model.services.ClientService;
+import io.github.opeterfreitas.carrental.model.services.exceptions.ObjectNotFoundException;
+import io.github.opeterfreitas.carrental.rest.dto.CepDto;
+import io.github.opeterfreitas.carrental.rest.dto.ClientDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -14,19 +16,29 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class ClientServiceImpl implements ClientService {
 
-    private ClientRepository repository;
+    private final ClientRepository repository;
 
-    public ClientServiceImpl(ClientRepository repository) {
-        this.repository = repository;
+    @Override
+    public Client findById(Long id) {
+        Optional<Client> clientOptional = repository.findById(id);
+        return clientOptional.
+                orElseThrow(() -> new ObjectNotFoundException(
+                        "Objeto não encontrado! Id:" + id + ", Tipo: " + Client.class.getName()));
+    }
+
+    @Override
+    public List<Client> findAll() {
+        List<Client> list = repository.findAll();
+        return list;
     }
 
     @Override
     @Transactional
-    public Client save(ClientDto dto) {
-
+    public Client create(ClientDto dto) {
         CepDto cepDto = consultaCep(dto.getCep());
 
         dto.setLogradouro(cepDto.getLogradouro());
@@ -42,24 +54,19 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Optional<Client> findById(Long id) {
-        return repository.findById(id);
-    }
-
-    @Override
     @Transactional
-    public void delete(Client client) {
+    public void delete(Long id) {
+        Client client = findById(id);
         repository.delete(client);
     }
 
     @Override
-    public List<Client> findAll() {
-        return repository.findAll();
-    }
-
-    @Override
     @Transactional
-    public Client updateClient(Client client) {
+    public Client update(Long id, ClientDto dto) {
+        var clientExists = findById(id);
+        Client client = dto.toModel();
+        client.setId(clientExists.getId());
+        client.setRegistrationDate(clientExists.getRegistrationDate());
         return repository.save(client);
     }
 

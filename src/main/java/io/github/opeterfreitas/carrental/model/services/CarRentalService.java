@@ -1,27 +1,26 @@
 package io.github.opeterfreitas.carrental.model.services;
 
-import io.github.opeterfreitas.carrental.controller.dto.CarRentalDto;
 import io.github.opeterfreitas.carrental.model.entities.CarRental;
+import io.github.opeterfreitas.carrental.rest.dto.CarRentalDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public interface CarRentalService {
 
-    CarRental save(CarRentalDto dto);
+    CarRental findById(Long id);
 
-    List<CarRental> findByDateReturnIsNull();
+    List<CarRental> findAllOpen();
 
-    List<CarRental> findByDateReturnNotNull();
+    List<CarRental> findAllClose();
 
     List<CarRental> findAll();
 
-    Optional<CarRental> findById(Long id);
+    CarRental create(CarRentalDto dto);
 
-    void delete(CarRental carRental);
+    void delete(Long id);
 
-    CarRental updateCarRental(CarRental carRental);
+    CarRental update(Long id, CarRentalDto dto);
 
 }

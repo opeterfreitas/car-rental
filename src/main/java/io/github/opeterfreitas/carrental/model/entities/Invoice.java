@@ -4,9 +4,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Invoice implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -17,35 +23,8 @@ public class Invoice implements Serializable {
     private Double basicPayment;
     private Double tax;
 
-    public Invoice() {
-    }
-
     public Invoice(Double basicPayment, Double tax) {
         this.basicPayment = basicPayment;
-        this.tax = tax;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Double getBasicPayment() {
-        return basicPayment;
-    }
-
-    public void setBasicPayment(Double basicPayment) {
-        this.basicPayment = basicPayment;
-    }
-
-    public Double getTax() {
-        return tax;
-    }
-
-    public void setTax(Double tax) {
         this.tax = tax;
     }
 
